@@ -4,13 +4,13 @@ import AntTable from "../../components/Table/Table";
 
 const { Content } = Layout;
 
-const Users = () => {
+const Drivers = () => {
   return (
     <Content>
       <div style={{ padding: "24px", background: "#fff" }}>
         <div style={{ marginBottom: "24px" }}>
           <h1 style={{ fontSize: "32px", fontWeight: "bold", margin: 0 }}>
-            User Dashboard
+            Driver Dashboard
           </h1>
           <p
             style={{
@@ -19,7 +19,7 @@ const Users = () => {
               margin: "8px 0 0",
             }}
           >
-            Hi, Samantha. Welcome back to User Dashboard!
+            Hi, Samantha. Welcome back to Driver Dashboard!
           </p>
         </div>
 
@@ -50,7 +50,7 @@ const Users = () => {
               />
               <div>
                 <p style={{ margin: 0, fontSize: "16px", color: "#8c8c8c" }}>
-                  Active Users
+                  Active Drivers
                 </p>
                 <h2
                   style={{
@@ -85,7 +85,7 @@ const Users = () => {
               />
               <div>
                 <p style={{ margin: 0, fontSize: "16px", color: "#8c8c8c" }}>
-                  Non Active Users
+                  Non Active Drivers
                 </p>
                 <h2
                   style={{
@@ -122,7 +122,7 @@ const Users = () => {
               />
               <div>
                 <p style={{ margin: 0, fontSize: "16px", color: "#fff" }}>
-                  Total Users
+                  Total Drivers
                 </p>
                 <h2
                   style={{
@@ -137,11 +137,11 @@ const Users = () => {
             </div>
           </Card>
         </div>
-        <h3 style={{ marginBottom: "16px" }}>Users List</h3>
+        <h3 style={{ marginBottom: "16px" }}>Drivers List</h3>
         <AntTable />
       </div>
     </Content>
   );
 };
 
-export default Users;
+export default Drivers;
