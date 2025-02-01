@@ -1,10 +1,15 @@
 import { Layout, Card } from "antd";
 import { UserOutlined, TeamOutlined } from "@ant-design/icons";
 import AntTable from "../../components/Table/Table";
+import { useUsers } from "../../hooks/useUsers";
 
 const { Content } = Layout;
 
 const Users = () => {
+  const { data, error, isLoading, isError } = useUsers();
+
+  console.log(data, ";::::");
+
   return (
     <Content>
       <div style={{ padding: "24px", background: "#fff" }}>
