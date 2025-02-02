@@ -1,4 +1,5 @@
 import axios from "axios";
+import { errorAlert } from "../utils/alert";
 
 const API_URL = "http://16.16.31.243:3000/api/v1/auth/";
 
@@ -29,8 +30,8 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response && error.response.status === 401) {
-      console.log("Session expired, redirecting to login...");
+    if (error.response) {
+      errorAlert(error.response.data.errors);
     }
     return Promise.reject(error);
   }
