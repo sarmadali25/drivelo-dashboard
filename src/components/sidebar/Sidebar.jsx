@@ -3,9 +3,10 @@ import { Layout, Menu } from "antd";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   UserOutlined,
-  TeamOutlined,
   LogoutOutlined,
   ProfileOutlined,
+  CarOutlined,
+  PullRequestOutlined,
 } from "@ant-design/icons";
 
 const { Sider } = Layout;
@@ -39,7 +40,7 @@ const SideBar = () => {
           fontWeight: "bold",
         }}
       >
-        YOURLOGO
+        DRIVE LO
       </div>
       <Menu
         style={{
@@ -53,7 +54,8 @@ const SideBar = () => {
         <NavLink
           to="/"
           style={
-            isActiveRoute(pathname, "/")
+            isActiveRoute(pathname, "/") ||
+            isActiveRoute(pathname, "/user/profile")
               ? {
                   backgroundColor: "#fff",
                   borderRadius: "12px",
@@ -77,26 +79,29 @@ const SideBar = () => {
         >
           <UserOutlined
             style={
-              isActiveRoute(pathname, "/")
+              isActiveRoute(pathname, "/") ||
+              isActiveRoute(pathname, "/user/profile")
                 ? { fontSize: "20px", color: "#2a63c7" }
                 : { fontSize: "20px", color: "#fff" }
             }
           />
           <span
             style={
-              isActiveRoute(pathname, "/")
+              isActiveRoute(pathname, "/") ||
+              isActiveRoute(pathname, "/user/profile")
                 ? { fontSize: "16px", fontWeight: "500", color: "#2a63c7" }
                 : { fontSize: "14px", fontWeight: "500", color: "#fff" }
             }
           >
-            User
+            Users
           </span>
         </NavLink>
 
         <NavLink
           to="/drivers"
           style={
-            isActiveRoute(pathname, "/drivers")
+            isActiveRoute(pathname, "/drivers") ||
+            isActiveRoute(pathname, "/driver/profile")
               ? {
                   backgroundColor: "#fff",
                   borderRadius: "12px",
@@ -118,16 +123,18 @@ const SideBar = () => {
                 }
           }
         >
-          <TeamOutlined
+          <CarOutlined
             style={
-              isActiveRoute(pathname, "/drivers")
+              isActiveRoute(pathname, "/drivers") ||
+              isActiveRoute(pathname, "/driver/profile")
                 ? { fontSize: "20px", color: "#2a63c7" }
                 : { fontSize: "20px", color: "#fff" }
             }
           />
           <span
             style={
-              isActiveRoute(pathname, "/drivers")
+              isActiveRoute(pathname, "/drivers") ||
+              isActiveRoute(pathname, "/driver/profile")
                 ? { fontSize: "16px", fontWeight: "500", color: "#2a63c7" }
                 : { fontSize: "14px", fontWeight: "500", color: "#fff" }
             }
@@ -163,7 +170,7 @@ const SideBar = () => {
                 }
           }
         >
-          <TeamOutlined
+          <PullRequestOutlined
             style={
               isActiveRoute(pathname, "/approvals")
                 ? { fontSize: "20px", color: "#2a63c7" }
@@ -242,9 +249,9 @@ const SideBar = () => {
         </div>
 
         <NavLink
-          to="/profile"
+          to="/user/details"
           style={
-            isActiveRoute(pathname, "/profile")
+            isActiveRoute(pathname, "/user/details")
               ? {
                   backgroundColor: "#fff",
                   borderRadius: "12px",
@@ -270,14 +277,14 @@ const SideBar = () => {
         >
           <ProfileOutlined
             style={
-              isActiveRoute(pathname, "/profile")
+              isActiveRoute(pathname, "/user/details")
                 ? { fontSize: "20px", color: "#2a63c7" }
                 : { fontSize: "20px", color: "#fff" }
             }
           />
           <span
             style={
-              isActiveRoute(pathname, "/profile")
+              isActiveRoute(pathname, "/user/details")
                 ? { fontSize: "16px", fontWeight: "500", color: "#2a63c7" }
                 : { fontSize: "14px", fontWeight: "500", color: "#fff" }
             }

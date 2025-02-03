@@ -7,6 +7,8 @@ import Drivers from "./screens/drivers/Drivers";
 import SignupRequest from "./screens/approval/SignupRequest";
 import PaymentRequest from "./screens/approval/PaymentRequest";
 import ErrorBoundary from "./components/ErrorBoundary";
+import DriverProfile from "./screens/drivers/DriverProfile";
+import UserDetailPage from "./screens/users/UserProfile";
 
 const { Content } = Layout;
 
@@ -27,6 +29,8 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Users />} />
                 <Route path="/drivers" element={<Drivers />} />
+                <Route path="/driver/profile/:id" element={<DriverProfile />} />
+                <Route path="/user/profile/:id" element={<UserDetailPage />} />
                 <Route
                   path="approvals/signup-request"
                   element={<SignupRequest />}

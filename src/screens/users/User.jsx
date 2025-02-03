@@ -5,6 +5,7 @@ import {
   TeamOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 import { useUsers } from "../../hooks/useUsers";
 import Loader from "../../components/Loader";
@@ -105,14 +106,23 @@ const Users = () => {
     {
       title: "Actions",
       key: "actions",
-      render: (_, record) => (
-        <a
-          href={`/profile/${record.id}`}
-          style={{ marginRight: "16px", color: "#1890ff" }}
-        >
-          View Profile
-        </a>
-      ),
+      align: "center",
+      render: (_, record) => {
+        return (
+          <a
+            href={`user/profile/${record?.key}`}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              color: "#1890ff",
+              fontSize: "18px",
+            }}
+          >
+            <EyeOutlined />
+          </a>
+        );
+      },
     },
   ];
 
