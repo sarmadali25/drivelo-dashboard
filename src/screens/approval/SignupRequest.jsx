@@ -1,8 +1,6 @@
-import { Layout, Card, Table, Tag, Badge } from "antd";
+import { Layout, Table, Tag, Badge } from "antd";
 import { useState, useMemo } from "react";
 import {
-  UserOutlined,
-  TeamOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
   EyeOutlined,
