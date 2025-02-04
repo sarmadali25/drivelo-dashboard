@@ -67,7 +67,7 @@ const SignupRequests = () => {
       email: user.email,
       phone_number: user.phone_number,
       createdAt: user?.driver?.created_at || user?.createdAt,
-      is_document_verified: user.is_document_verified,
+      is_document_verified: user.is_approved,
       driver_type: user?.driver?.driver_type,
       is_fee_paid: user?.driver?.is_fee_paid,
       is_online: user?.driver?.is_online,

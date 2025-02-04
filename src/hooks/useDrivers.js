@@ -16,7 +16,7 @@ const approveSignupRequest = async ({ id }) => {
 };
 
 export const useDrivers = ({ page, limit }) => {
-  const { data, isLoading, isFetching } = useQuery(
+  const { data, isLoading, isFetching, refetch } = useQuery(
     ["users", { page, limit }],
     fetchDriversData,
     {
@@ -33,14 +33,14 @@ export const useDrivers = ({ page, limit }) => {
     data,
     isLoading,
     isFetching,
+    refetch,
   };
 };
 
 export const useApproveDriver = () => {
   return useMutation(approveSignupRequest, {
-    onSuccess: (data) => {
-      console.log("Driver Documents Approved", data);
-      successAlert("Driver Documents Approved");
+    onSuccess: () => {
+      successAlert("Driver verified successfully");
     },
     onError: (error) => {
       console.log("Error approving payment:", error);
