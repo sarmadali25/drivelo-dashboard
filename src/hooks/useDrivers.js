@@ -20,8 +20,6 @@ export const useDrivers = ({ page, limit }) => {
     ["users", { page, limit }],
     fetchDriversData,
     {
-      staleTime: 300000,
-      keepPreviousData: true,
       retry: 0,
       onError: (error) => {
         console.log("Error fetching users data:", error);
