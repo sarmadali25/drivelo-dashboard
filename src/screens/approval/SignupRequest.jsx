@@ -12,7 +12,7 @@ import Loader from "../../components/Loader";
 
 const { Content } = Layout;
 
-const Drivers = () => {
+const SignupRequests = () => {
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
   const [sorter, setSorter] = useState({ field: null, order: null });
 
@@ -269,7 +269,7 @@ const Drivers = () => {
           <>
             <div style={{ marginBottom: "24px" }}>
               <h1 style={{ fontSize: "32px", fontWeight: "bold", margin: 0 }}>
-                Driver Dashboard
+                Signup Requests
               </h1>
               <p
                 style={{
@@ -278,130 +278,11 @@ const Drivers = () => {
                   margin: "8px 0 0",
                 }}
               >
-                Hi, Admin. Welcome back to Driver Dashboard!
+                Hi, Admin. Welcome back to Signup Requests!
               </p>
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                gap: "16px",
-                marginBottom: "24px",
-              }}
-            >
-              <Card
-                style={{
-                  flex: 1,
-                  maxWidth: "250px",
-                  borderRadius: "12px",
-                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <UserOutlined
-                    style={{
-                      fontSize: "40px",
-                      color: "#1890ff",
-                      marginRight: "16px",
-                    }}
-                  />
-                  <div>
-                    <p
-                      style={{ margin: 0, fontSize: "16px", color: "#8c8c8c" }}
-                    >
-                      Active Drivers
-                    </p>
-                    <h2
-                      style={{
-                        margin: 0,
-                        fontSize: "24px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      765K
-                    </h2>
-                  </div>
-                </div>
-              </Card>
-
-              <Card
-                style={{
-                  flex: 1,
-                  borderRadius: "12px",
-                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                  maxWidth: "250px",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <TeamOutlined
-                    style={{
-                      fontSize: "40px",
-                      color: "#1890ff",
-                      marginRight: "16px",
-                    }}
-                  />
-                  <div>
-                    <p
-                      style={{ margin: 0, fontSize: "16px", color: "#8c8c8c" }}
-                    >
-                      Non Active Drivers
-                    </p>
-                    <h2
-                      style={{
-                        margin: 0,
-                        fontSize: "24px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      15
-                    </h2>
-                  </div>
-                </div>
-              </Card>
-
-              <Card
-                style={{
-                  flex: 1,
-                  borderRadius: "12px",
-                  maxWidth: "250px",
-                  backgroundColor: "#1890ff",
-                  color: "#fff",
-                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <UserOutlined
-                    style={{
-                      fontSize: "40px",
-                      color: "#fff",
-                      marginRight: "16px",
-                    }}
-                  />
-                  <div>
-                    <p style={{ margin: 0, fontSize: "16px", color: "#fff" }}>
-                      Total Drivers
-                    </p>
-                    <h2
-                      style={{
-                        margin: 0,
-                        fontSize: "24px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      200K+
-                    </h2>
-                  </div>
-                </div>
-              </Card>
-            </div>
-
-            <h3 style={{ marginBottom: "16px" }}>Drivers List</h3>
+            <h3 style={{ marginBottom: "16px" }}>Signup Requests List</h3>
 
             <Table
               dataSource={dataSource}
@@ -425,4 +306,4 @@ const Drivers = () => {
   );
 };
 
-export default Drivers;
+export default SignupRequests;
