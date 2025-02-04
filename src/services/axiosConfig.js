@@ -1,7 +1,7 @@
 import axios from "axios";
 import { errorAlert } from "../utils/alert";
 
-const API_URL = "http://16.16.31.243:3000/api/v1/auth/";
+const API_URL = "http://16.16.31.243:3000/api/v1/";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -30,8 +30,9 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
+    console.log(error);
     if (error.response) {
-      errorAlert(error.response.data.errors);
+      errorAlert(error.response.data.errors || error.response.data.message);
     }
     return Promise.reject(error);
   }

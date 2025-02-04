@@ -160,7 +160,7 @@ const Users = () => {
                   margin: "8px 0 0",
                 }}
               >
-                Hi, Samantha. Welcome back to User Dashboard!
+                Hi, Admin. Welcome back to User Dashboard!
               </p>
             </div>
 

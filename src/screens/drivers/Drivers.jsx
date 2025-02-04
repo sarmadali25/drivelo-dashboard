@@ -278,7 +278,7 @@ const Users = () => {
                   margin: "8px 0 0",
                 }}
               >
-                Hi, Samantha. Welcome back to Driver Dashboard!
+                Hi, Admin. Welcome back to Driver Dashboard!
               </p>
             </div>
 

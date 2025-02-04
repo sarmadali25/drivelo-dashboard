@@ -4,14 +4,14 @@ import api from "../services/axiosConfig";
 const fetchUsersData = async ({ queryKey }) => {
   const [, { page, limit }] = queryKey;
   const response = await api.get(
-    `users?user_type=general&limit=${limit}&page=${page}`
+    `auth/users?user_type=general&limit=${limit}&page=${page}`
   );
   return response.data;
 };
 
 const fetchUserById = async ({ queryKey }) => {
   const [, { id }] = queryKey;
-  const response = await api.get(`users/${id}`);
+  const response = await api.get(`auth/users/${id}`);
   return response.data;
 };
 

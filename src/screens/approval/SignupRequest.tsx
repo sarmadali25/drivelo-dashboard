@@ -20,7 +20,7 @@ const SignupRequest = () => {
               margin: "8px 0 0",
             }}
           >
-            Hi, Samantha. Welcome back to Signup Request Dashboard!
+            Hi, Admin. Welcome back to Signup Request Dashboard!
           </p>
         </div>
 
