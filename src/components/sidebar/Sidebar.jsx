@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout, Menu } from "antd";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   UserOutlined,
   LogoutOutlined,
@@ -13,6 +13,7 @@ const { Sider } = Layout;
 
 const SideBar = () => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const [approvalsOpen, setApprovalsOpen] = React.useState(true);
 
   const isActiveRoute = (currentPathName, route) => {
@@ -20,6 +21,12 @@ const SideBar = () => {
       return currentPathName === route;
     }
     return currentPathName.includes(route);
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
   };
 
   return (
@@ -303,11 +310,13 @@ const SideBar = () => {
           alignItems: "center",
           height: "40px",
           border: "1px solid white",
+          cursor: "pointer",
           width: "70%",
           backgroundColor: "#ffffff",
           borderRadius: "12px",
           textAlign: "center",
         }}
+        onClick={logout}
       >
         <LogoutOutlined style={{ fontSize: "20px", color: "#2a63c7" }} />
         <span style={{ color: "#2a63c7", marginLeft: "8px" }}>Log Out</span>
