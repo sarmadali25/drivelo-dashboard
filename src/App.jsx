@@ -109,11 +109,13 @@ const App = () => {
   );
 };
 
-export default () => (
+const AppWrapper = () => (
   <Router>
     <App />
   </Router>
 );
+
+export default AppWrapper;
 
 PrivateRoute.propTypes = {
   children: PropTypes.node.isRequired,
