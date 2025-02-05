@@ -1,7 +1,7 @@
 import axios from "axios";
 import { errorAlert } from "../utils/alert";
 
-const API_URL = "http://16.16.31.243:3000/api/v1/";
+const API_URL = "https://api.drivelo.ae/api/v1/";
 
 const api = axios.create({
   baseURL: API_URL,
