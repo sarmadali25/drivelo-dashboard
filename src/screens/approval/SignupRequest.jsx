@@ -1,11 +1,25 @@
-import { Layout, Table, Tag, Badge } from "antd";
+import {
+  Layout,
+  Table,
+  Tag,
+  Badge,
+  Modal,
+  Button,
+  Row,
+  Col,
+  Card,
+  Avatar,
+  Image,
+  Spin,
+} from "antd";
 import { useState, useMemo } from "react";
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   EyeOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
-import { useDrivers } from "../../hooks/useDrivers";
+import { useApproveDriver, useDrivers } from "../../hooks/useDrivers";
 import Loader from "../../components/Loader";
 
 const { Content } = Layout;
@@ -13,11 +27,15 @@ const { Content } = Layout;
 const SignupRequests = () => {
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
   const [sorter, setSorter] = useState({ field: null, order: null });
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedDriver, setSelectedDriver] = useState({});
 
-  const { data, isLoading, isFetching } = useDrivers({
+  const { data, isLoading, isFetching, refetch } = useDrivers({
     page: pagination.current,
     limit: pagination.pageSize,
   });
+
+  const { mutate, isLoading: isUpdating } = useApproveDriver();
 
   const sortedData = useMemo(() => {
     if (!data?.result?.users) return [];
@@ -49,11 +67,14 @@ const SignupRequests = () => {
       email: user.email,
       phone_number: user.phone_number,
       createdAt: user?.driver?.created_at || user?.createdAt,
-      is_document_verified:
-        user?.driver?.is_approved || user.is_document_verified,
+      is_document_verified: user.is_approved,
       driver_type: user?.driver?.driver_type,
       is_fee_paid: user?.driver?.is_fee_paid,
       is_online: user?.driver?.is_online,
+      documents: user?.driver?.documents || [],
+      profile_image:
+        user?.driver?.profile_image ||
+        "https://www.shutterstock.com/image-vector/blank-avatar-photo-icon-design-600nw-1682415103.jpg",
     }));
   }, [sortedData]);
 
@@ -119,7 +140,7 @@ const SignupRequests = () => {
                     }}
                   >
                     <img
-                      src="https://www.shutterstock.com/image-vector/blank-avatar-photo-icon-design-600nw-1682415103.jpg"
+                      src={record?.profile_image}
                       alt="Avatar"
                       style={{
                         width: "100%",
@@ -224,9 +245,10 @@ const SignupRequests = () => {
       key: "actions",
       align: "center",
       render: (_, record) => {
+        console.log(record);
         return (
           <a
-            href={`driver/profile/${record?.key}`}
+            onClick={() => handleViewDocuments(record)}
             style={{
               display: "flex",
               justifyContent: "center",
@@ -256,6 +278,23 @@ const SignupRequests = () => {
     } else {
       setSorter({ field: null, order: null });
     }
+  };
+
+  const handleViewDocuments = (driver) => {
+    setSelectedDriver(driver);
+    setIsModalVisible(true);
+  };
+
+  const handleApproveDocuments = () => {
+    mutate(
+      { id: selectedDriver.key },
+      {
+        onSuccess: () => {
+          setIsModalVisible(false);
+          refetch();
+        },
+      }
+    );
   };
 
   return (
@@ -300,6 +339,151 @@ const SignupRequests = () => {
           </>
         )}
       </div>
+
+      <Modal
+        title={
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              paddingBottom: "16px",
+            }}
+          >
+            <Avatar
+              src={
+                selectedDriver?.documents?.find(
+                  (img) => img?.document_type === "driver_photo"
+                )?.document_url
+              }
+              size={64}
+            />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                color: "#808080",
+                marginLeft: "16px",
+              }}
+            >
+              <span style={{ fontSize: "13px" }}>
+                {selectedDriver?.first_name}
+              </span>
+              <span style={{ fontSize: "13px" }}>{selectedDriver?.email}</span>
+              <span style={{ fontSize: "13px" }}>
+                {selectedDriver?.phone_number}
+              </span>
+            </div>
+          </div>
+        }
+        visible={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        footer={null}
+        width={900}
+        height={600}
+        style={{ top: 20 }}
+      >
+        <div
+          style={{
+            maxHeight: "450px",
+            overflowY: "auto",
+            paddingRight: "16px",
+            paddingBottom: "16px",
+            marginTop: "20px",
+          }}
+        >
+          <Row gutter={16}>
+            {selectedDriver?.documents?.map((doc, index) => {
+              if (doc?.document_type !== "driver_photo") {
+                return (
+                  <Col span={8} key={index}>
+                    <Card
+                      title={doc?.document_type}
+                      bordered={false}
+                      style={{
+                        border: "1px solid #C8C8C8",
+                        borderRadius: "12px",
+                        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+                        overflow: "hidden",
+                        marginTop: "16px",
+                        transition: "box-shadow 0.3s ease",
+                      }}
+                      hoverable
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.boxShadow =
+                          "0 6px 15px rgba(0, 0, 0, 0.2)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.boxShadow =
+                          "0 4px 12px rgba(0, 0, 0, 0.15)";
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: "relative",
+                          width: "100%",
+                          height: "200px",
+                          overflow: "hidden",
+                          cursor: "pointer",
+                        }}
+                        onMouseMove={(e) => {
+                          const bounds =
+                            e.currentTarget.getBoundingClientRect();
+                          const offsetX = e.clientX - bounds.left;
+                          const offsetY = e.clientY - bounds.top;
+                          const moveX = (offsetX / bounds.width) * 20 - 10;
+                          const moveY = (offsetY / bounds.height) * 20 - 10;
+                          e.currentTarget.querySelector(
+                            "img"
+                          ).style.transform = `scale(1.3) translate(${moveX}px, ${moveY}px)`;
+                        }}
+                        onMouseLeave={(e) => {
+                          const img = e.currentTarget.querySelector("img");
+                          img.style.transform = "scale(1)";
+                        }}
+                      >
+                        <Image
+                          src={doc?.document_url}
+                          alt={`Document ${index + 1}`}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            transition: "transform 0.3s ease",
+                          }}
+                        />
+                      </div>
+                    </Card>
+                  </Col>
+                );
+              }
+            })}
+          </Row>
+        </div>
+        <div
+          style={{
+            paddingTop: "16px",
+            paddingBottom: "16px",
+            textAlign: "right",
+            marginTop: "20px",
+          }}
+        >
+          <Button
+            disabled={selectedDriver?.is_document_verified}
+            type="primary"
+            onClick={handleApproveDocuments}
+          >
+            {isUpdating ? (
+              <Spin
+                style={{ color: "white" }}
+                indicator={<LoadingOutlined spin />}
+                size="small"
+              />
+            ) : (
+              "Approve Documents"
+            )}
+          </Button>
+        </div>
+      </Modal>
     </Content>
   );
 };
