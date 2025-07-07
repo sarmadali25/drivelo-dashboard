@@ -11,7 +11,17 @@ const fetchDriversData = async ({ queryKey }) => {
 };
 
 const approveSignupRequest = async ({ id }) => {
-  const response = await api.patch(`auth/users/${id}/approve`);
+  const response = await api.patch(`auth/users/${id}/approve`, {
+    action: "approve",
+  });
+  return response.data;
+};
+
+const rejectSignupRequest = async ({ id, errorMessage }) => {
+  const response = await api.patch(`auth/users/${id}/approve`, {
+    action: "reject",
+    error_message: errorMessage,
+  });
   return response.data;
 };
 
@@ -41,7 +51,18 @@ export const useApproveDriver = () => {
       successAlert("Driver verified successfully");
     },
     onError: (error) => {
-      console.log("Error approving payment:", error);
+      console.log("Error approving driver:", error);
+    },
+  });
+};
+
+export const useRejectDriver = () => {
+  return useMutation(rejectSignupRequest, {
+    onSuccess: () => {
+      successAlert("Driver Rejected");
+    },
+    onError: (error) => {
+      console.log("Error while rejecting driver", error);
     },
   });
 };
