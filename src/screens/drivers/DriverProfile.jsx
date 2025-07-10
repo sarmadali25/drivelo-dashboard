@@ -6,9 +6,34 @@ import {
   CloseCircleOutlined,
   CarOutlined,
   UserOutlined,
+  SyncOutlined,
+  ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import { useSingleUser } from "../../hooks/useUsers";
 import Loader from "../../components/Loader";
+
+const STATUS_MAPS = {
+  pending: {
+    text: "Pending",
+    color: "blue",
+    icon: <SyncOutlined spin />,
+  },
+  submitted: {
+    text: "Submitted",
+    color: "orange",
+    icon: <ExclamationCircleOutlined />,
+  },
+  verified: {
+    text: "Verified",
+    color: "green",
+    icon: <CheckCircleOutlined />,
+  },
+  rejected: {
+    text: "Rejected",
+    color: "red",
+    icon: <CloseCircleOutlined />,
+  },
+};
 
 const DriverDetailPage = () => {
   const { id } = useParams();
@@ -19,13 +44,15 @@ const DriverDetailPage = () => {
     first_name = "Not available",
     email = "Not available",
     createdAt = "Not available",
+    document_status = "",
     documents: userDocuments = [],
     driver = {},
   } = data?.result?.user || {};
 
+  console.log(data?.result?.user, "::::::");
+
   const {
     driver_type = "Not specified",
-    is_approved = false,
     is_fee_paid = false,
     is_online = false,
     national_id = "Not available",
@@ -122,16 +149,10 @@ const DriverDetailPage = () => {
                   <Col span={6}>
                     <h4>Status</h4>
                     <Tag
-                      color={is_approved ? "green" : "red"}
-                      icon={
-                        is_approved ? (
-                          <CheckCircleOutlined />
-                        ) : (
-                          <CloseCircleOutlined />
-                        )
-                      }
+                      color={STATUS_MAPS[document_status]["color"]}
+                      icon={STATUS_MAPS[document_status]["icon"]}
                     >
-                      {is_approved ? "Approved" : "Pending"}
+                      {STATUS_MAPS[document_status]["text"]}
                     </Tag>
                   </Col>
                   <Col span={6}>

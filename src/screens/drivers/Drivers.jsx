@@ -1,16 +1,42 @@
 import { Layout, Card, Table, Tag, Badge } from "antd";
 import { useState, useMemo } from "react";
 import {
-  UserOutlined,
-  TeamOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
   EyeOutlined,
+  UserOutlined,
+  TeamOutlined,
+  SyncOutlined,
+  ExclamationCircleOutlined,
 } from "@ant-design/icons";
+
 import { useDrivers } from "../../hooks/useDrivers";
 import Loader from "../../components/Loader";
 
 const { Content } = Layout;
+
+const STATUS_MAPS = {
+  pending: {
+    text: "Pending",
+    color: "blue",
+    icon: <SyncOutlined spin />,
+  },
+  submitted: {
+    text: "Submitted",
+    color: "orange",
+    icon: <ExclamationCircleOutlined />,
+  },
+  verified: {
+    text: "Verified",
+    color: "green",
+    icon: <CheckCircleOutlined />,
+  },
+  rejected: {
+    text: "Rejected",
+    color: "red",
+    icon: <CloseCircleOutlined />,
+  },
+};
 
 const Drivers = () => {
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
@@ -51,6 +77,7 @@ const Drivers = () => {
       email: user.email,
       phone_number: user.phone_number,
       createdAt: user?.driver?.created_at || user?.createdAt,
+      document_status: user?.document_status,
       is_document_verified: user.is_document_verified,
       driver_type: user?.driver?.driver_type,
       is_fee_paid: user?.driver?.is_fee_paid,
@@ -210,13 +237,13 @@ const Drivers = () => {
     {
       title: "Status",
       key: "status",
-      dataIndex: "is_document_verified",
+      dataIndex: "document_status",
       render: (isVerified) => (
         <Tag
-          color={isVerified ? "green" : "red"}
-          icon={isVerified ? <CheckCircleOutlined /> : <CloseCircleOutlined />}
+          color={STATUS_MAPS[isVerified]["color"]}
+          icon={STATUS_MAPS[isVerified]["icon"]}
         >
-          {isVerified ? "Verified" : "Not Verified"}
+          {STATUS_MAPS[isVerified]["text"]}
         </Tag>
       ),
     },

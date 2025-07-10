@@ -18,17 +18,49 @@ import {
   CloseCircleOutlined,
   EyeOutlined,
   LoadingOutlined,
+  SyncOutlined,
+  ExclamationCircleOutlined,
 } from "@ant-design/icons";
-import { useApproveDriver, useDrivers } from "../../hooks/useDrivers";
+import {
+  useApproveDriver,
+  useDrivers,
+  useRejectDriver,
+} from "../../hooks/useDrivers";
 import Loader from "../../components/Loader";
 
 const { Content } = Layout;
+
+const STATUS_MAPS = {
+  pending: {
+    text: "Pending",
+    color: "blue",
+    icon: <SyncOutlined spin />,
+  },
+  submitted: {
+    text: "Submitted",
+    color: "orange",
+    icon: <ExclamationCircleOutlined />,
+  },
+  verified: {
+    text: "Verified",
+    color: "green",
+    icon: <CheckCircleOutlined />,
+  },
+  rejected: {
+    text: "Rejected",
+    color: "red",
+    icon: <CloseCircleOutlined />,
+  },
+};
 
 const SignupRequests = () => {
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
   const [sorter, setSorter] = useState({ field: null, order: null });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedDriver, setSelectedDriver] = useState({});
+  const [selectedDocuments, setSelectedDocuments] = useState([]);
+
+  console.log(selectedDriver, "selectedDriver");
 
   const { data, isLoading, isFetching, refetch } = useDrivers({
     page: pagination.current,
@@ -36,6 +68,7 @@ const SignupRequests = () => {
   });
 
   const { mutate, isLoading: isUpdating } = useApproveDriver();
+  const { mutate: rejectMutate, isLoading: isRejecting } = useRejectDriver();
 
   const sortedData = useMemo(() => {
     if (!data?.result?.users) return [];
@@ -60,6 +93,39 @@ const SignupRequests = () => {
     return users;
   }, [data, sorter]);
 
+  const handleCheckboxChange = (documentType, checked) => {
+    if (checked) {
+      setSelectedDocuments((prev) => [...prev, documentType]);
+    } else {
+      setSelectedDocuments((prev) =>
+        prev.filter((doc) => doc !== documentType)
+      );
+    }
+  };
+
+  const formatDocumentType = (documentType) => {
+    return documentType
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
+  const handleRejectDocuments = () => {
+    const errorMessage = `"The following documents contain errors:${selectedDocuments
+      .map(formatDocumentType)
+      .join(", ")}."`;
+
+    rejectMutate(
+      { id: selectedDriver.key, errorMessage: errorMessage },
+      {
+        onSuccess: () => {
+          setIsModalVisible(false);
+          refetch();
+        },
+      }
+    );
+  };
+
   const dataSource = useMemo(() => {
     return sortedData.map((user) => ({
       key: user.id,
@@ -72,6 +138,7 @@ const SignupRequests = () => {
       is_fee_paid: user?.driver?.is_fee_paid,
       is_online: user?.driver?.is_online,
       documents: user?.driver?.documents || [],
+      document_status: user?.document_status,
       profile_image:
         user?.driver?.profile_image ||
         "https://www.shutterstock.com/image-vector/blank-avatar-photo-icon-design-600nw-1682415103.jpg",
@@ -230,13 +297,13 @@ const SignupRequests = () => {
     {
       title: "Status",
       key: "status",
-      dataIndex: "is_document_verified",
+      dataIndex: "document_status",
       render: (isVerified) => (
         <Tag
-          color={isVerified ? "green" : "red"}
-          icon={isVerified ? <CheckCircleOutlined /> : <CloseCircleOutlined />}
+          color={STATUS_MAPS[isVerified]["color"]}
+          icon={STATUS_MAPS[isVerified]["icon"]}
         >
-          {isVerified ? "Verified" : "Not Verified"}
+          {STATUS_MAPS[isVerified]["text"]}
         </Tag>
       ),
     },
@@ -425,21 +492,6 @@ const SignupRequests = () => {
                           overflow: "hidden",
                           cursor: "pointer",
                         }}
-                        onMouseMove={(e) => {
-                          const bounds =
-                            e.currentTarget.getBoundingClientRect();
-                          const offsetX = e.clientX - bounds.left;
-                          const offsetY = e.clientY - bounds.top;
-                          const moveX = (offsetX / bounds.width) * 20 - 10;
-                          const moveY = (offsetY / bounds.height) * 20 - 10;
-                          e.currentTarget.querySelector(
-                            "img"
-                          ).style.transform = `scale(1.3) translate(${moveX}px, ${moveY}px)`;
-                        }}
-                        onMouseLeave={(e) => {
-                          const img = e.currentTarget.querySelector("img");
-                          img.style.transform = "scale(1)";
-                        }}
                       >
                         <Image
                           src={doc?.document_url}
@@ -452,6 +504,20 @@ const SignupRequests = () => {
                           }}
                         />
                       </div>
+                      <div style={{ marginTop: "10px" }}>
+                        <input
+                          type="checkbox"
+                          onChange={(e) =>
+                            handleCheckboxChange(
+                              doc?.document_type,
+                              e.target.checked
+                            )
+                          }
+                        />
+                        <span style={{ marginLeft: "8px" }}>
+                          Select to Reject
+                        </span>
+                      </div>
                     </Card>
                   </Col>
                 );
@@ -459,29 +525,60 @@ const SignupRequests = () => {
             })}
           </Row>
         </div>
-        <div
-          style={{
-            paddingTop: "16px",
-            paddingBottom: "16px",
-            textAlign: "right",
-            marginTop: "20px",
-          }}
-        >
-          <Button
-            disabled={selectedDriver?.is_document_verified}
-            type="primary"
-            onClick={handleApproveDocuments}
+
+        <div style={{ display: "flex", gap: "24px", justifyContent: "right" }}>
+          <div
+            style={{
+              paddingTop: "16px",
+              paddingBottom: "16px",
+              textAlign: "right",
+              marginTop: "20px",
+            }}
           >
-            {isUpdating ? (
-              <Spin
-                style={{ color: "white" }}
-                indicator={<LoadingOutlined spin />}
-                size="small"
-              />
-            ) : (
-              "Approve Documents"
-            )}
-          </Button>
+            <Button
+              disabled={
+                selectedDriver?.document_status === "verified" ? true : false
+              }
+              type="primary"
+              onClick={handleApproveDocuments}
+            >
+              {isUpdating ? (
+                <Spin
+                  style={{ color: "white" }}
+                  indicator={<LoadingOutlined spin />}
+                  size="small"
+                />
+              ) : (
+                "Approve Documents"
+              )}
+            </Button>
+          </div>
+
+          <div
+            style={{
+              paddingTop: "16px",
+              paddingBottom: "16px",
+              textAlign: "right",
+              marginTop: "20px",
+            }}
+          >
+            <Button
+              type="primary"
+              onClick={handleRejectDocuments}
+              disabled={selectedDocuments.length === 0}
+              danger
+            >
+              {isRejecting ? (
+                <Spin
+                  style={{ color: "white" }}
+                  indicator={<LoadingOutlined spin />}
+                  size="small"
+                />
+              ) : (
+                "Reject Documents"
+              )}
+            </Button>
+          </div>
         </div>
       </Modal>
     </Content>
